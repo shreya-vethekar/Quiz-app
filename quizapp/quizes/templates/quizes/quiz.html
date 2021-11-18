@@ -1,0 +1,18 @@
+{% extends "base.html"%}
+{% load static %}
+
+{% block scripts %}
+    <script src="{% static 'quizes/quiz.js' %}" defer></script> 
+{% endblock scripts %}
+<style>
+body{
+    background-color: #7abecc
+}
+</style>
+{{obj.name}}
+{% endblock title %}
+
+{% block content %}
+{{obj.name}}
+{% endblock content %}
+
