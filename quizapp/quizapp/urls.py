@@ -17,9 +17,23 @@ from django.contrib import admin
 from django.urls import path ,include
 from django.conf import settings
 from django.conf.urls.static import static
+from .import views
+from django.contrib.auth import views as auth_views
+from user import views as user_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('quizes.urls', namespace='quizes')),
+    path('quizes/', include('quizes.urls')),
+    #user related
+    path('index/',include('user.urls')),
+    path('',user_view.Login,name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='user/login.html'),name='logout'),
+    path('register/', user_view.register, name ='register'),
+
+
+  
+
+    
+    
 ]
 urlpatterns +=static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
