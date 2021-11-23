@@ -1,14 +1,17 @@
 from django.db import models
-from django.db.models.deletion import CASCADE
 from quizes.models import Quiz  # import Quiz model from quizes app
+import uuid
 # Create your models here.
 class Question(models.Model):
-    text =models.CharField(max_length=200)
-    quiz=models.ForeignKey(Quiz,on_delete=models.CASCADE)
-    created=models.DateTimeField(auto_now_add=True)
+    question_id=models.UUIDField(primary_key=True,default=uuid.uuid4)
+    question_text =models.CharField(max_length=200)
+    quiz_id=models.ForeignKey(Quiz,on_delete=models.CASCADE)
+    created_time=models.DateTimeField(auto_now_add=True)
+    type=models.CharField(max_length=200)
+    scores=models.FloatField()
 
     def __str__(self):
-        return str(self.text)
+        return str(self.question_text)
 
     def get_answers(self):
         #here we haveall answers for the questions
@@ -16,10 +19,11 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
-    text=models.CharField(max_length=200)
-    correct=models.BooleanField(default=False)
-    question=models.ForeignKey(Question,on_delete=models.CASCADE)
-    created=models.DateTimeField(auto_now_add=True)
+    answer_id=models.UUIDField(primary_key=True,default=uuid.uuid4)
+    answer_text=models.CharField(max_length=200)
+    correct_answer=models.BooleanField(default=False)
+    question_id=models.ForeignKey(Question,on_delete=models.CASCADE)
+    created_time=models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Question :{self.question} ,Answer : {self.text} ,correct : {self.correct}"
+        return f"Answer : {self.answer_text} ,correct : {self.correct_answer}"

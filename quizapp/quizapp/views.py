@@ -3,6 +3,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 
+
 def handleLogin(request):
     if request.method =="POST":
         loginusername=request.POST['loginusername']
@@ -11,10 +12,10 @@ def handleLogin(request):
         if user is not None:
             login(request,user)
             messages.success(request,"Successfully Logged In")
-            return redirect("quizes/main.html")
+            return redirect("home")
         else:
             messages.error(request,"Invalid Credentials ,Please try again")
-            return redirect("quizes/main.html")
+            return redirect("home")
     return HttpResponse('handleLogin') 
 
 def handleLogout(request):

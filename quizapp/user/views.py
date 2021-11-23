@@ -1,4 +1,3 @@
-
 from django.contrib.auth import authenticate
 from django.core.checks import messages
 from django.shortcuts import render,redirect
@@ -6,12 +5,19 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import authenticate,login
 from django.contrib import messages
+from django.urls.base import reverse_lazy
 from .forms import CreateUserForm
 from django.contrib.auth.models import User
 from .models import UserOTP
 import random
 from django.conf import settings
 from django.core.mail import send_mail
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
+
+
+
+
 def index(request):
     return render(request,"user/index.html")
 
@@ -73,11 +79,16 @@ def Login(request):
         if user is not None:
             form=login(request,user)
             messages.success(request,f"Welcome {username} !!")
-            return redirect(request,'quizes/main.html')
+            return redirect("home")
         else:
             messages.error(request,f"Account Do not exit please sign in")
     form=AuthenticationForm()
     return render(request,"user/login.html")
+
+
+@login_required(login_url=reverse_lazy("login"))
+def home(request):
+    return render(request,"quizes/home.html")
     
 def password_reset(request):
     return render(request,'password_reset.html')

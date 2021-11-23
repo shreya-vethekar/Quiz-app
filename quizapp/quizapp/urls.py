@@ -20,10 +20,11 @@ from django.conf.urls.static import static
 from .import views
 from django.contrib.auth import views as auth_views
 from user import views as user_view
-
+from quizes import views as quizes_view
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('quizes/main/', include('quizes.urls')),
+    path('quizes/',include('quizes.urls')),
+    path('home/',user_view.home,name='home'),
     #user related
     path('index/',include('user.urls')),
     path('',user_view.Login,name='login'),
