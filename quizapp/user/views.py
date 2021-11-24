@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.urls.base import reverse_lazy
 from .forms import CreateUserForm
 from django.contrib.auth.models import User
-from .models import UserOTP
+#from .models import UserOTP
 import random
 from django.conf import settings
 from django.core.mail import send_mail
@@ -29,14 +29,15 @@ def register(request):
         if get_otp:
            get_user=request.POST.get('user')
            user=User.objects.get(username=get_user)
-           if int(get_otp) ==UserOTP.objects.filter(user=user).last().otp:
-               user.is_active=True
-               user.save()
-               messages.success(request,f"Your Account has been created {user.username}")
-               return redirect('login')
-           else:
-                messages.error(request,f"You entered a wrong OTP")
-                return render(request,"user/register.html",{'otp':True,'user':user}) 
+           #if int(get_otp) ==UserOTP.objects.filter(user=user).last().otp:
+              # user.is_active=True
+               
+               #user.save()
+               #messages.success(request,f"Your Account has been created {user.username}")
+               #return redirect('login')
+           #else:
+             #   messages.error(request,f"You entered a wrong OTP")
+              #  return render(request,"user/register.html",{'otp':True,'user':user}) 
 
 
 
@@ -49,7 +50,7 @@ def register(request):
             user.is_active=False
             form.save() 
             user_otp=random.randint(100000,999999)
-            UserOTP.objects.create(user=user,otp=user_otp)
+            #UserOTP.objects.create(user=user,otp=user_otp)
             #message of mail
             message_mail=f"Hello {username},\n Your OTP is {user_otp} \n Thank you"
             send_mail(
@@ -96,3 +97,5 @@ def password_reset(request):
 def password_reset_done(request):
     return render(request,"password_reset_done.html")
  
+def password_reset_complete(request):
+    return render(request,"password_reset_complete.html")

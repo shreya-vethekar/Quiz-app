@@ -25,3 +25,5 @@ class Quiz(models.Model):
 
     class Meta:
         verbose_name_plural = 'Quizes'
+
+
