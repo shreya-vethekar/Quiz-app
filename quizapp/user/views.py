@@ -8,13 +8,12 @@ from django.contrib import messages
 from django.urls.base import reverse_lazy
 from .forms import CreateUserForm
 from django.contrib.auth.models import User
-#from .models import UserOTP
-import random
+from .models import UserOTP
 from django.conf import settings
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
+import pyotp 
 
 
 
@@ -29,15 +28,14 @@ def register(request):
         if get_otp:
            get_user=request.POST.get('user')
            user=User.objects.get(username=get_user)
-           #if int(get_otp) ==UserOTP.objects.filter(user=user).last().otp:
-              # user.is_active=True
-               
-               #user.save()
-               #messages.success(request,f"Your Account has been created {user.username}")
-               #return redirect('login')
-           #else:
-             #   messages.error(request,f"You entered a wrong OTP")
-              #  return render(request,"user/register.html",{'otp':True,'user':user}) 
+           if get_otp ==UserOTP.objects.filter(user=user).last().otp:
+               user.is_active=True
+               user.save()
+               messages.success(request,f"Your Account has been created {user.username}")
+               return redirect('login')
+           else:
+                messages.error(request,f"You entered a wrong OTP")
+                return render(request,"user/register.html",{'otp':True,'user':user}) 
 
 
 
@@ -46,11 +44,16 @@ def register(request):
             form.save()
             username=form.cleaned_data.get('username')
             email=form.cleaned_data.get('email')
+            base32 = pyotp.random_base32()
+            totp = pyotp.TOTP(base32)
+            otp = totp.now()
             user=User.objects.get(username=username)
             user.is_active=False
-            form.save() 
-            user_otp=random.randint(100000,999999)
-            #UserOTP.objects.create(user=user,otp=user_otp)
+            user_otp = otp 
+            user.save()
+            #form.save() 
+            #user_otp=random.randint(100000,999999)
+            UserOTP.objects.create(user=user,otp=user_otp)
             #message of mail
             message_mail=f"Hello {username},\n Your OTP is {user_otp} \n Thank you"
             send_mail(
