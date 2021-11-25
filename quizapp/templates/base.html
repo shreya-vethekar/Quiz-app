@@ -38,15 +38,29 @@
 
     <div class="container mt-6">
       <nav class="navbar navbar-light" style="background-color:#f7ba5b">
-        <span class="navbar-brand mb-0 h1" style="color:#fff">QUIZ APP</span>
-        <button type="button" class="btn btn-light">    
-        SEARCH
-      </button>
+        <span class="navbar-brand mb-0 h1" style="color:#fff">
+        <a href="/">QUIZ APP</a></span>
+        <ul class="navbar-nav mr-auto">
+      {% if user.is_authenticated %}
+      
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Welcome, {{user.username}}</a>
+      </li>
+    
+     {% else %}
+      <li class="nav-item">
+        <a class="nav-link" href="/login">Login</a>
+      </li>
+
+      {% endif %}
       </nav>
     </div>
     {% for message in messages%}
     <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-  <strong>Message :</strong> {{message}}
+  <strong> Message :</strong> {{message}}
 </div>
 {% endfor %}
 {% block content %}

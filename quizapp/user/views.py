@@ -14,7 +14,7 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 import pyotp 
-
+from django.contrib import auth
 
 
 def index(request):
@@ -28,11 +28,12 @@ def register(request):
         if get_otp:
            get_user=request.POST.get('user')
            user=User.objects.get(username=get_user)
-           if get_otp ==UserOTP.objects.filter(user=user).last().otp:
+           if int(get_otp) ==UserOTP.objects.filter(user=user).last().otp:
                user.is_active=True
                user.save()
                messages.success(request,f"Your Account has been created {user.username}")
                return redirect('login')
+            
            else:
                 messages.error(request,f"You entered a wrong OTP")
                 return render(request,"user/register.html",{'otp':True,'user':user}) 
@@ -84,16 +85,22 @@ def Login(request):
             form=login(request,user)
             messages.success(request,f"Welcome {username} !!")
             return redirect("home")
+        elif len(password) != 8:
+            messages.error(request,f"You entered a wrong password ,Please try again")
+            return redirect("login")
         else:
             messages.error(request,f"Account Do not exit please sign in")
     form=AuthenticationForm()
     return render(request,"user/login.html")
 
 
-@login_required(login_url=reverse_lazy("login"))
-def home(request):
-    return render(request,"quizes/home.html")
+
     
+def logout(request):
+    auth.logout(request)
+    messages.success(request,"Successfully Logged Out")
+    return render(request, 'login.html')
+
 def password_reset(request):
     return render(request,'password_reset.html')
 
@@ -101,4 +108,4 @@ def password_reset_done(request):
     return render(request,"password_reset_done.html")
  
 def password_reset_complete(request):
-    return render(request,"password_reset_complete.html")
+    return redirect("password_reset_complete")
