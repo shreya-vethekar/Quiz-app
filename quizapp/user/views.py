@@ -5,14 +5,13 @@ from django.http import HttpResponse
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import authenticate,login
 from django.contrib import messages
-from django.urls.base import reverse_lazy
+from django.urls.base import reverse
 from .forms import CreateUserForm
 from django.contrib.auth.models import User
 from .models import UserOTP
 from django.conf import settings
 from django.core.mail import send_mail
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+#from django.contrib.auth.decorators import login_required
 import pyotp 
 from django.contrib import auth
 
@@ -76,15 +75,16 @@ def register(request):
     context={'form':form}
     return render(request,"user/register.html",context)
 
-def Login(request):
+def login_in(request):
     if request.method =="POST":
         username=request.POST['username']
         password=request.POST['password']
         user=authenticate(request,username=username,password=password)
         if user is not None:
             form=login(request,user)
+            print("###")
             messages.success(request,f"Welcome {username} !!")
-            return redirect("home")
+            return redirect(reverse('quizes:main_view'))
         elif len(password) != 8:
             messages.error(request,f"You entered a wrong password ,Please try again")
             return redirect("login")
@@ -94,12 +94,15 @@ def Login(request):
     return render(request,"user/login.html")
 
 
-
+#@login_required(login_url=reverse_lazy("login"))
+#def home(request):
+ #   return redirect('main-view')
     
-def logout(request):
+def log_out(request):
     auth.logout(request)
     messages.success(request,"Successfully Logged Out")
     return render(request, 'login.html')
+
 
 def password_reset(request):
     return render(request,'password_reset.html')

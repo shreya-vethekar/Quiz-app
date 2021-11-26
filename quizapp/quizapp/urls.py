@@ -24,11 +24,11 @@ from user import views as user_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #path('home/',include('quizes.urls')),
-    path('login/home/',views.home,name='home'),
+    path('', include('quizes.urls',namespace="quizes")),
+    
     #user related
     path('',include('user.urls')),
-    path('login',user_view.Login,name='login'),
+    path('login/',user_view.login_in,name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='user/login.html'),name='logout'),
     path('register/', user_view.register, name ='register'),
     path('password_reset/',auth_views.PasswordResetView.as_view(template_name='user/password_reset.html'),name='password_reset'),
@@ -36,6 +36,6 @@ urlpatterns = [
     path('password_reset_confirm/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='user/password_reset_confirm.html'),name='password_reset_confirm'),
     path('password_reset_complete/',auth_views.PasswordResetCompleteView.as_view(template_name='user/password_reset_complete.html'),
          name='password_reset_complete'),
-
-]
-urlpatterns +=static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
+    
+] 
+urlpatterns+= static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)

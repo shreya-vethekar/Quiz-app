@@ -40,8 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'quizes',
-    'questions',
-    'results',
     'user',
 ]
 
@@ -146,5 +144,5 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
-LOGIN_REDIRECT_URL='home'
-LOGIN_URL=''
+LOGIN_REDIRECT_URL='main_view'
+LOGOUT_REDIRECT_URL='login'

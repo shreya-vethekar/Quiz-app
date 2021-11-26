@@ -4,7 +4,7 @@ from django.db.models.deletion import CASCADE
 
 class UserOTP(models.Model):
     user=models.ForeignKey(User,on_delete=CASCADE)
-    time_st=models.DateTimeField(auto_now=True)
+    time_stamp=models.DateTimeField(auto_now=True)
     otp=models.SmallIntegerField()
 
 
